@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: odoo_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - odoo-net
+
+  odoo:
+    image: odoo:17
+    container_name: odoo_app
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    environment:
+      HOST: db
+      USER: ${POSTGRES_USER:-odoo}
+      PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    volumes:
+      - odoo-web-data:/var/lib/odoo       # données Odoo (filestore, sessions...)
+      - ./config:/etc/odoo               # conf Odoo (odoo.conf)
+      - ./addons:/mnt/extra-addons       # tes modules persos
+    restart: unless-stopped
+    networks:
+      - odoo-net
+
+volumes:
+  pgdata:
+  odoo-web-data:
+
+networks:
+  odoo-net:
+    driver: bridge
