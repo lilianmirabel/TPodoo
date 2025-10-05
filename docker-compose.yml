@@ -26,9 +26,9 @@ services:
       USER: ${POSTGRES_USER:-odoo}
       PASSWORD: ${POSTGRES_PASSWORD:-odoo}
     volumes:
-      - odoo-web-data:/var/lib/odoo       # données Odoo (filestore, sessions...)
-      - ./config:/etc/odoo               # conf Odoo (odoo.conf)
-      - ./addons:/mnt/extra-addons       # tes modules persos
+      - odoo-web-data:/var/lib/odoo # données Odoo (filestore, sessions...)
+      - ./config:/etc/odoo # conf Odoo (odoo.conf)
+      - ./addons:/mnt/extra-addons # tes modules persos
     restart: unless-stopped
     networks:
       - odoo-net
